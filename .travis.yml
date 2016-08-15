@@ -20,6 +20,13 @@ script:
   else
     (cd diesel && travis-cargo test -- --no-default-features --features "chrono $BACKEND")
   fi &&
+  if [[ "$BACKEND" == postgres ]]; then
+    if [[ "$TRAVIS_RUST_VERSION" == nightly* ]]; then
+      (cd examples && ./test_nightly)
+    else
+      (cd examples && ./test_stable)
+    fi
+  fi &&
   (cd diesel_cli && travis-cargo test -- --no-default-features --features "$BACKEND") &&
   if [[ "$TRAVIS_RUST_VERSION" == nightly* ]]; then
     (cd diesel_codegen_syntex && travis-cargo test -- --no-default-features --features "$BACKEND")
